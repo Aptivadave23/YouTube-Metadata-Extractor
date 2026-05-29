@@ -1,0 +1,33 @@
+{
+  "branches": [
+    "main"
+  ],
+  "plugins": [
+    "@semantic-release/commit-analyzer",
+    "@semantic-release/release-notes-generator",
+    [
+      "@semantic-release/changelog",
+      {
+        "changelogFile": "CHANGELOG.md"
+      }
+    ],
+    [
+      "@semantic-release/exec",
+      {
+        "prepareCmd": "bash ./scripts/prepare-release.sh ${nextRelease.version}",
+        "successCmd": "bash -lc 'printf %s \"${nextRelease.version}\" > .next-release-version'"
+      }
+    ],
+    [
+      "@semantic-release/github",
+      {
+        "assets": [
+          "publish/release-assets/ytmd-osx-arm64.tar.gz",
+          "publish/release-assets/ytmd-osx-x64.tar.gz",
+          "publish/release-assets/ytmd-linux-x64.tar.gz",
+          "publish/release-assets/ytmd-win-x64.zip"
+        ]
+      }
+    ]
+  ]
+}

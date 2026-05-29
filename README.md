@@ -1,6 +1,76 @@
 # YouTube Metadata Extractor
 This is a cross-platform console app that takes a YouTube video link and extracts relevant metadata and transcript that is placed into a markdown file.  Very useful for Obsidian-based Second Brain setups if you aren't able to install the Obsidian Web Clipper.
 
+## Local macOS install
+
+For a local Apple Silicon install that does not require typing `dotnet run`, use the publish script:
+
+```bash
+bash scripts/publish-local-mac.sh
+```
+
+If `~/.local/bin` is not already on your `PATH`, add it in `zsh`:
+
+```bash
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zshrc
+source ~/.zshrc
+```
+
+Run the installed command like this:
+
+```bash
+ytmd "https://www.youtube.com/watch?v=VIDEO_ID" "/Users/you/Documents/My Output"
+```
+
+## Releases and versioning
+
+GitHub Releases are built automatically from `main` using `semantic-release` and Conventional Commits.
+
+- Initial release seed:
+
+```bash
+git tag v0.0.1
+git push origin v0.0.1
+```
+
+- Version bump rules:
+  - `fix:` creates a patch release
+  - `feat:` creates a minor release
+  - `BREAKING CHANGE:` or `feat!:` creates a major release
+  - `chore:`, `docs:`, `ci:`, `style:`, `refactor:`, and `test:` do not create a release by default
+
+Example commit messages:
+
+```text
+fix: handle missing transcript file cleanly
+feat: add linux release packaging
+feat!: change command-line argument parsing
+```
+
+Published release artifacts:
+
+- `ytmd-osx-arm64.tar.gz`
+- `ytmd-osx-x64.tar.gz`
+- `ytmd-linux-x64.tar.gz`
+- `ytmd-win-x64.zip`
+
+After downloading the artifact for your platform:
+
+- macOS and Linux: extract the `.tar.gz`, make sure `ytmd` is executable, and run:
+
+```bash
+./ytmd "https://www.youtube.com/watch?v=VIDEO_ID" "/path/to/output"
+```
+
+- Windows: extract the `.zip` and run:
+
+```powershell
+.\ytmd.exe "https://www.youtube.com/watch?v=VIDEO_ID" "C:\path\to\output"
+```
+
+- Release artifacts include the .NET app only. `yt-dlp` must still be installed separately.
+- `YOUTUBE_API_KEY` must still be configured in the environment before running the tool.
+
 
 
 ## Cross-Platform Runtime Requirements
