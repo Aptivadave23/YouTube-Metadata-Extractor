@@ -9,15 +9,30 @@ public static class Markdown
         string outputDirectory
     )
     {
-        Directory.CreateDirectory(outputDirectory);
+        try 
+        {
+            Directory.CreateDirectory(outputDirectory);
 
-        var fileName = GetSafeFileName($"{metadata.PublishedAt:yyyy-MM-dd} - {metadata.Title}.md");
-        var filePath = Path.Combine(outputDirectory, fileName);
-        var markdownContent = BuildMarkdown(metadata);
+            var fileName = GetSafeFileName($"{metadata.PublishedAt:yyyy-MM-dd} - {metadata.Title}.md");
+            var filePath = Path.Combine(outputDirectory, fileName);
+            var markdownContent = BuildMarkdown(metadata);
 
-        await File.WriteAllTextAsync(filePath, markdownContent, Encoding.UTF8);
-
-        return filePath;
+            await File.WriteAllTextAsync(filePath, markdownContent, Encoding.UTF8);
+            return filePath;
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            throw new InvalidOperationException(
+                $"No permission to write to '{outputDirectory}'.",
+                ex);
+        }
+        catch (IOException ex)
+        {
+            throw new InvalidOperationException(
+                $"Failed to write markdown output to '{outputDirectory}'.",
+                ex);
+        }
+        
     }
     
     private static string BuildMarkdown(YouTubeMetadata metadata)

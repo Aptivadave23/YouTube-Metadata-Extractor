@@ -147,13 +147,14 @@ dotnet run -- "https://www.youtube.com/watch?v=VIDEO_ID" "C:\Users\you\Documents
 
 - The current implementation reads the output folder from the second positional argument.
 - The printed usage text mentions `--out`, but the present code does not parse `--out` as a named option.
+- If neither an output folder argument nor `YTMD_OUTPUT_DIR` is provided, the app errors instead of falling back to a default output folder.
 
 ### Temporary files and output files
 
 - VTT transcript files are scratch files written under a local `temp` directory during transcript extraction.
 - The app attempts to delete the temporary `.vtt` file after processing, so the temp folder should not be treated as final output.
 - Markdown output is written to the output folder passed as the second argument.
-- If no output folder is provided, the current default is an `output` folder under the current working directory.
+- If no output folder is provided and `YTMD_OUTPUT_DIR` is unset, the app stops with a clear error instead of using a default folder.
 
 ### Windows-specific notes
 

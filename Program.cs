@@ -25,11 +25,7 @@ try
     //get the video url from the command line arguments
     var videoUrl = args[0];
     //get the output folder from the command line arguments
-    var outputFolder = args.Length > 1 ? args[1] :
-        Path.Combine(Directory.GetCurrentDirectory(), "output");
-
-    
-    Console.WriteLine(outputFolder);
+    var outputFolder = args.Length > 1 ? args[1] : null;
 
     // start process indicator
     await AnsiConsole.Status()
@@ -41,8 +37,15 @@ try
 
             ctx.Status("Generating markdown file...");
 
-           
-            markdownFile = await Markdown.WriteMarkdownFileAsync(video, outputFolder);
+            // get the ouptut directory from the environment variable
+            // if not set, check the command line arguments
+            // if not set, throw an exception
+            var outputDir = outputFolder ?? Environment.GetEnvironmentVariable("YTMD_OUTPUT_DIR");
+            if (outputDir is null)
+            {
+                throw new InvalidOperationException("Output directory not specified. Set the YTMD_OUTPUT_DIR environment variable or provide it as a command line argument.");
+            }
+            markdownFile = await Markdown.WriteMarkdownFileAsync(video, outputDir);
         });
     AnsiConsole.MarkupLine($"[green]Markdown file generated at:[/] [blue]{markdownFile}[/]");    
 
