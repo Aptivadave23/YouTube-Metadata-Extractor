@@ -108,7 +108,7 @@ jobs:
         if: ${{ (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && steps.relver.outputs.version != '' && steps.signed_commit.outputs.skip != 'true' }}
         id: pr
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.AUTO_APPROVE_TOKEN }}
         run: |
           branch="${{ steps.signed_commit.outputs.branch }}"
 
@@ -142,7 +142,7 @@ jobs:
         if: ${{ (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && steps.pr.outputs.number != '' }}
         uses: peter-evans/enable-pull-request-automerge@v3
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.AUTO_APPROVE_TOKEN }}
           pull-request-number: ${{ steps.pr.outputs.number }}
           merge-method: squash
 
