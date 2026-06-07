@@ -48,6 +48,7 @@ try
             markdownFile = await Markdown.WriteMarkdownFileAsync(video, outputDir);
         });
     AnsiConsole.MarkupLine($"[green]Markdown file generated at:[/] [blue]{markdownFile}[/]");    
+    
 
 }
 catch (Exception ex)
@@ -62,7 +63,7 @@ static void RenderBannerByWord()
 {
     var words = new[]
     {
-        ("YoutTube", "red"),
+        ("YouTube", "red"),
         ("Metadata", "green"),
         ("Extractor", "blue")
     };

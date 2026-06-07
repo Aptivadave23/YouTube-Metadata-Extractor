@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
@@ -16,6 +16,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Aptivadave.Wokenator" Version="0.1.2" />
     <PackageReference Include="Figgle" Version="0.6.6" />
     <PackageReference Include="Figgle.Fonts" Version="0.6.6" />
     <PackageReference Include="Figgle.Generator" Version="0.6.6" />
