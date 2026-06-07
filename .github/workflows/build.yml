@@ -135,14 +135,14 @@ jobs:
         if: ${{ (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && steps.pr.outputs.number != '' }}
         uses: hmarr/auto-approve-action@v4
         with:
-          github-token: ${{ secrets.AUTO_APPROVE_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           pull-request-number: ${{ steps.pr.outputs.number }}
 
       - name: Enable auto-merge for release PR
         if: ${{ (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && steps.pr.outputs.number != '' }}
         uses: peter-evans/enable-pull-request-automerge@v3
         with:
-          token: ${{ secrets.AUTO_APPROVE_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           pull-request-number: ${{ steps.pr.outputs.number }}
           merge-method: squash
 
