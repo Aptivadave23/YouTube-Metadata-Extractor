@@ -1,9 +1,48 @@
 # YouTube Metadata Extractor
-This is a cross-platform console app that takes a YouTube video link and extracts relevant metadata and transcript that is placed into a markdown file.  Very useful for Obsidian-based Second Brain setups if you aren't able to install the Obsidian Web Clipper.
+![App Banner for YouTub Metadata Extractor](/imgs/appbanner.png)
+This is a small terminal application that does 1 thing:  grab metadata and transcripts from a YouTube video URL and puts that data into a markdown file.
 
-## Local macOS install
+That's it.
 
-For a local Apple Silicon install that does not require typing `dotnet run`, use the publish script:
+### Why did I build this?
+Well, you can blame bureaucracy.  I needed the [Obsidian Web Clipper](https://obsidian.md/clipper), which does not only the same functionality as this app but more.  However, I couldn't get it approved fast enough, so I just built it myself.
+
+Super simple to use:
+- Install
+- Grab yourself a YouTube API key
+- Point this app to a directory (or pass a directory in the command to run)
+- ???
+- Markdown file
+
+
+
+## App Flow
+
+```mermaid
+flowchart TD
+    A["Start app"] --> B["Clear console and render banner"]
+    B --> C{"Video URL provided?"}
+    C -- No --> D["Print usage and exit"]
+    C -- Yes --> E["Read video URL from argv[0]"]
+    E --> F["Resolve output folder from argv[1] or YTMD_OUTPUT_DIR"]
+    F --> G{"Output folder found?"}
+    G -- No --> H["Throw error and exit"]
+    G -- Yes --> I["Read YOUTUBE_API_KEY"]
+    I --> J["Fetch YouTube metadata"]
+    J --> K["Run yt-dlp to extract transcript as VTT"]
+    K --> L["Convert VTT transcript to markdown"]
+    L --> M["Delete temporary VTT file"]
+    M --> N["Write markdown file to output folder"]
+    N --> O["Print generated file path"]
+```
+
+## App Installation and Usage
+
+### Installation by platform
+
+#### macOS
+
+Use the local publish script:
 
 ```bash
 bash scripts/publish-local-mac.sh
@@ -22,30 +61,29 @@ Run the installed command like this:
 ytmd "https://www.youtube.com/watch?v=VIDEO_ID" "/Users/you/Documents/My Output"
 ```
 
-## Releases and versioning
+#### Linux
 
-GitHub Releases are built automatically from `main` using `semantic-release` and Conventional Commits.
-
-- Initial release seed:
+Install or publish the app with the .NET SDK for your distro and architecture, then run the published binary from the extracted release artifact or your chosen install path:
 
 ```bash
-git tag v0.0.1
-git push origin v0.0.1
+./ytmd "https://www.youtube.com/watch?v=VIDEO_ID" "/home/you/Documents/My Output"
 ```
 
-- Version bump rules:
-  - `fix:` creates a patch release
-  - `feat:` creates a minor release
-  - `BREAKING CHANGE:` or `feat!:` creates a major release
-  - `chore:`, `docs:`, `ci:`, `style:`, `refactor:`, and `test:` do not create a release by default
+If you install the binary manually, make sure it is executable:
 
-Example commit messages:
-
-```text
-fix: handle missing transcript file cleanly
-feat: add linux release packaging
-feat!: change command-line argument parsing
+```bash
+chmod +x ./ytmd
 ```
+
+#### Windows
+
+Extract the `.zip` release artifact or publish with the .NET SDK, then run:
+
+```powershell
+.\ytmd.exe "https://www.youtube.com/watch?v=VIDEO_ID" "C:\Users\you\Documents\My Output"
+```
+
+### Published release artifacts
 
 Published release artifacts:
 
@@ -71,9 +109,7 @@ After downloading the artifact for your platform:
 - Release artifacts include the .NET app only. `yt-dlp` must still be installed separately.
 - `YOUTUBE_API_KEY` must still be configured in the environment before running the tool.
 
-
-
-## Cross-Platform Runtime Requirements
+### Cross-platform runtime requirements
 
 ### Supported platforms
 
@@ -95,14 +131,14 @@ macOS or Linux (`bash` or `zsh`):
 
 ```bash
 export YOUTUBE_API_KEY="your-api-key-here"
-dotnet run -- "https://www.youtube.com/watch?v=VIDEO_ID"
+ytmd "https://www.youtube.com/watch?v=VIDEO_ID"
 ```
 
 Windows PowerShell:
 
 ```powershell
 $env:YOUTUBE_API_KEY = "your-api-key-here"
-dotnet run -- "https://www.youtube.com/watch?v=VIDEO_ID"
+ytmd -- "https://www.youtube.com/watch?v=VIDEO_ID"
 ```
 
 Windows persistent setup with `setx`:
@@ -136,13 +172,13 @@ setx YOUTUBE_API_KEY "your-api-key-here"
 macOS or Linux:
 
 ```bash
-dotnet run -- "https://www.youtube.com/watch?v=VIDEO_ID" "/Users/you/Documents/My Output"
+ytmd "https://www.youtube.com/watch?v=VIDEO_ID" "/Users/you/Documents/My Output"
 ```
 
 Windows PowerShell:
 
 ```powershell
-dotnet run -- "https://www.youtube.com/watch?v=VIDEO_ID" "C:\Users\you\Documents\My Output"
+ytmd -- "https://www.youtube.com/watch?v=VIDEO_ID" "C:\Users\you\Documents\My Output"
 ```
 
 - The current implementation reads the output folder from the second positional argument.
@@ -166,6 +202,31 @@ dotnet run -- "https://www.youtube.com/watch?v=VIDEO_ID" "C:\Users\you\Documents
 - File paths are case-sensitive on most Linux systems.
 - If `yt-dlp` was installed manually, ensure it has execute permission.
 - The app creates its output directory when needed, but the parent location still must be writable by the current user.
+
+## Releases and versioning
+
+GitHub Releases are built automatically from `main` using `semantic-release` and Conventional Commits.
+
+- Initial release seed:
+
+```bash
+git tag v0.0.1
+git push origin v0.0.1
+```
+
+- Version bump rules:
+  - `fix:` creates a patch release
+  - `feat:` creates a minor release
+  - `BREAKING CHANGE:` or `feat!:` creates a major release
+  - `chore:`, `docs:`, `ci:`, `style:`, `refactor:`, and `test:` do not create a release by default
+
+Example commit messages:
+
+```text
+fix: handle missing transcript file cleanly
+feat: add linux release packaging
+feat!: change command-line argument parsing
+```
 
 ---
 
