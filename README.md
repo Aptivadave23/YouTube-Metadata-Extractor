@@ -243,3 +243,8 @@ This is free and unencumbered software released into the public domain.
 See the [LICENSE](LICENSE) file or <https://unlicense.org/> for details.
 
 SPDX-License-Identifier: Unlicense
+
+
+---
+
+<script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js" data-name="bmc-button" data-slug="aptivadave" data-color="#FFDD00" data-emoji="🍺"  data-font="Inter" data-text="Buy me a beer" data-outline-color="#000000" data-font-color="#000000" data-coffee-color="#ffffff" ></script>
