@@ -249,7 +249,7 @@ public static class TranscriptCleaner
         var formats = new[]
         {
             @"h\:mm\:ss\.fff",
-            @"@hh\:mm\:ss\.fff",
+            @"hh\:mm\:ss\.fff",
             @"m\:ss\.fff",
             @"mm\:ss\.fff"
         };
@@ -269,7 +269,7 @@ public static class TranscriptCleaner
     private static string FormatTimestamp(TimeSpan time)
     {
         return time.TotalHours >= 1
-            ? time.ToString(@"h\:MM\:ss", CultureInfo.InvariantCulture)
+            ? time.ToString(@"h\:mm\:ss", CultureInfo.InvariantCulture)
             : time.ToString(@"mm\:ss", CultureInfo.InvariantCulture);
     }
 }
