@@ -33,10 +33,34 @@ try
         .SpinnerStyle(Style.Parse("green"))
         .StartAsync("Extracting YouTube metadata and transcript...", async ctx =>
         {
+            Thread.Sleep(1000); // simulate some delay
             video = await YouTubeMetadata.GetYouTubeMetadataAsync(videoUrl);
 
-            ctx.Status("Generating markdown file...");
+            
+            
+        });
 
+    // start markdown generation
+    // if there is a transcript
+    var continueWithoutTranscript = false;
+    if(video.Transcript == null)
+    {
+        continueWithoutTranscript = AnsiConsole.Confirm("Transcript for this video could not be found.  Do you want to continue without it?", false);
+
+        if (!continueWithoutTranscript)
+        {
+            AnsiConsole.Markup("[red]Aborting markdown generation.[/]");
+            return;
+        }
+    }
+
+    await AnsiConsole.Status()
+        .Spinner(Spinner.Known.Star2)
+        .SpinnerStyle(Style.Parse("yellow"))
+        .StartAsync("Generating markdown file...", async ctx =>
+        {
+            // add some delay
+            Thread.Sleep(1500);
             // get the ouptut directory from the environment variable
             // if not set, check the command line arguments
             // if not set, throw an exception
@@ -46,6 +70,7 @@ try
                 throw new InvalidOperationException("Output directory not specified. Set the YTMD_OUTPUT_DIR environment variable or provide it as a command line argument.");
             }
             markdownFile = await Markdown.WriteMarkdownFileAsync(video, outputDir);
+
         });
     AnsiConsole.MarkupLine($"[green]Markdown file generated at:[/] [blue]{markdownFile}[/]");    
     
@@ -91,5 +116,8 @@ static void RenderBannerByWord()
 
         AnsiConsole.WriteLine();
     }
+
+    AnsiConsole.MarkupLine($"[blue]Built by Aptiva Dave[/]");
+    AnsiConsole.WriteLine();
 }
 
